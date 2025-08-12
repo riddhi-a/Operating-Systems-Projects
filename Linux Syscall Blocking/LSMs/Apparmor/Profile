@@ -1,0 +1,23 @@
+Profiles, as explained in the report, are sets of rules specifying what files, capabilities, or resources a program can access. To inhibit a the script /testa.sh to read
+the file /test_file_to_read, we can create the following profile:
+
+/testa.sh {
+
+      /testa.sh rix,
+      
+      deny /test_file_to_be_read r,
+      
+      /{,**} rwlkm,
+
+}
+
+This profile must be placed in the /etc/apparmor.d directory of the system. To load the profile in enforce mode, the following commands should be run next as root:
+
+a) sudo apparmor-parser-r /etc/apparmor.d/usr.bin.testa
+
+b) sudo aa-enforce /etc/apparmor.d/usr.bin.testa
+
+For graceful prompts and non-termination, we can set it to complain mode as well : aa-complain
+
+
+ 

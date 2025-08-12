@@ -1,0 +1,9 @@
+INSTRUCTIONS TO USE THIS SCRIPT.
+
+Modify the inp_list.txt file in the following manner:
+Each line should contain <syscall_name>,<namespace_1>,<namespace_2>,...,<namespace_(n)>
+where for each syscall_name, we've specified the required n namespaces to be blocked.
+
+[In case inp_list.txt has no valid entries (or is empty) then the Makefile doesn't compile anything]
+
+Save this file and then run the script: ./run.sh
