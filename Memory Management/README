@@ -1,0 +1,53 @@
+The code takes care of edge cases like: Invalid Memory Address, Invalid Pid <pid>, <filename> could not be loaded - file does not exist, <filename> could not be loaded - memory is full. It assumes that the memory size will be divisible by the page size. Swapping 2 pages has O(1) complexity (due to pointers) but the page replacement runs in O(log N). I have tried to optimise the code with respect to time complexity as much as possible. FIFO and LRU have a minor difference in code. The details about implementation 
+are mentioned below.
+
+Genrating Executable:
+   make all
+   make lru
+   make fifo
+   make clean (cleans/removes the executables)
+
+Running the code:
+
+  ./lru --M <main memory size in kb> --V <swap memory size in kb> --P <page size in bytes> --i <infile> --o <outfile>
+  ./fifo --M <main memory size in kb> --V <swap memory size in kb> --P <page size in bytes> --i <infile> --o <outfile>
+
+Data Structures Overview
+
+The paging system is implemented using the following main data structures:
+
+    Page Struct:
+        Represents a single page in memory.
+        Contains:
+            A vector of integers of size PAGE_SIZE, representing the page's memory.
+            pid: Process ID associated with the page.
+            tou: Time of update.
+            logical_page_number: The logical page number.
+
+    Memory Management:
+        Main Memory: Implemented as a vector of pointers to Page objects, sized according to MAIN_MEMORY_SIZE.
+        Swap Memory: Similar to main memory, represented by a vector of pointers to Page objects, sized according to  SWAP_MEMORY_SIZE.
+
+    Replacement Tracking:
+        A set of pairs is used to track pages in main memory:
+            The first element is the time of the last update (tou).
+            The second element is the physical page number.
+        The least recently used (LRU) page is identified by the first element in the set for replacement, same goes for FIFO just that tou is updated a little differently.
+
+    Replacement Algorithms:
+        FIFO (First-In-First-Out): Updates the time for a page whenever it is accessed.
+        LRU (Least Recently Used): Updates the time only when a page is loaded into main memory.
+
+    Free Page Management:
+        Two sets are maintained:
+            One for free pages in main memory.
+            One for free pages in swap memory.
+
+    Process Table:
+        A map with:
+            Key: Process ID (pid).
+            Value: A vector indicating the mapping of logical pages to physical pages in main or swap memory.
+
+Complexity
+
+    The replacement algorithm operates in O(log N) time complexity due to the use of sets and pointers.
